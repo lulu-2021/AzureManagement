@@ -1,0 +1,61 @@
+require 'bundler/setup'
+require 'rubygems'
+require 'albacore'
+#
+ENVIRONMENT = "Debug"
+#ENVIRONMENT = "Release"
+#
+BUILD_VERSION = 1001
+BUILD_DIR = "build"
+SOLUTION_NAME = "ManageAzure"
+PUBLISH_BASE = "c:/publish"
+PUBLISH_DIR = "#{PUBLISH_BASE}/#{SOLUTION_NAME}"
+SOLUTION = "#{SOLUTION_NAME}.sln"
+PROJECT_DIR = "ManageAzure"
+CONFIGURATION_OPT = "Debug"
+#CONFIGURATION_OPT = "Release"
+
+#
+XUNIT_CONSOLE = "./Packages/xunit.1.9.2.runner/xunit.console.clr4.exe"
+UNIT_TEST_PROJECT = "ManageAzureTests"
+UNIT_TEST_ASSEMBLY = "./#{UNIT_TEST_PROJECT}/bin/#{ENVIRONMENT}/#{UNIT_TEST_PROJECT}.dll"
+#
+desc "Run All Unit Tests"
+xunit :unittest do |xunit|
+    xunit.command = XUNIT_CONSOLE
+    xunit.assembly = UNIT_TEST_ASSEMBLY
+end
+#
+desc "Build the solution in the Release configuration"
+msbuild :build do |cmd|
+	cmd.solution = "#{SOLUTION}"
+	cmd.targets = [:Clean, :Build]
+	cmd.properties = {:Configuration => CONFIGURATION_OPT}
+end
+
+desc 'Publish the web service'
+msbuild :publish do |msb|
+  msb.solution = "#{SOLUTION}"
+  msb.targets [:Clean, :Rebuild]
+  msb.properties = { 
+    :configuration => :Release, 
+    :UseWPP_CopyWebApplication => true, 
+    :PipelineDependsOnBuild => false,
+    :webprojectoutputdir => "#{PUBLISH_DIR}/",
+    :outdir => "#{PUBLISH_DIR}/bin/"
+  }
+end
+
+desc 'create an archive of the published app'
+zip :zip do |zip|
+	Dir.mkdir("#{PUBLISH_BASE}/zip") unless Dir.exists?("#{PUBLISH_BASE}/zip")
+    zip.directories_to_zip PUBLISH_DIR
+    zip.output_file = "#{SOLUTION_NAME}.v#{BUILD_VERSION.to_s}.zip"
+    zip.output_path = "#{PUBLISH_BASE}/zip"  	
+end
+
+task :test => [:build, :unittest] do
+end
+
+task :default => [:build, :unittest, :publish, :zip] do
+end
