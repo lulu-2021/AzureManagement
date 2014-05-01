@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestData>
+  <SubscriptionId>"09f162f0-acd2-19e6-age6-1e90312255bf"</SubscriptionId>
+  <PublishSettingsFile>c:\temp\Azure_Publish_Settings\test.publishsettings</PublishSettingsFile>
+  <TestCloudServices>
+    <TestCloudService>
+      <CloudServiceName>"sample-prod"</CloudServiceName>
+      <CloudServiceName>"sample-test"</CloudServiceName>
+    </TestCloudService>
+  </TestCloudServices>
+  <TestVirtualMachines>
+    <TestVirtualMachine>
+      <VmName>vm-test-01</VmName>
+      <VmName>vm-test-02</VmName>
+    </TestVirtualMachine>
+  </TestVirtualMachines>
+  <TestComputeRoles>
+    <TestRole>
+      <ServiceName>service-01-prod</ServiceName>
+      <InstanceName>Prod.Item.Azure_IN_0</InstanceName>
+    </TestRole>
+    <TestRole>
+      <ServiceName>service-02-prod</ServiceName>
+      <InstanceName>Prod.Item.Azure_IN_1</InstanceName>
+    </TestRole>
+    <TestRole>
+      <ServiceName>service-01-test</ServiceName>
+      <InstanceName>Prod.Item.Azure_IN_0</InstanceName>
+    </TestRole>
+    <TestRole>
+      <ServiceName>service-02-test</ServiceName>
+      <InstanceName>Prod.Item.Azure_IN_1</InstanceName>
+    </TestRole>
+  </TestComputeRoles>
+</TestData>
