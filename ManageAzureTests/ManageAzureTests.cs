@@ -26,9 +26,10 @@ namespace ManageAzureTests
         {
             var expectedSubscriptionId = sut.Configuration.SubscriptionId();
             var expectedCertificateExists = sut.Configuration.Base64EncodedManagementCertificate().Length > 0;
+            var actualSubscriptionId = testData.SubscriptionId;
 
             Should.Equals(expectedCertificateExists, true);
-            Should.Equals(expectedSubscriptionId, "01f152f0-abd2-47e6-afe6-1e90752245bf");
+            Should.Equals(expectedSubscriptionId, actualSubscriptionId);
         }
 
         [Fact]
