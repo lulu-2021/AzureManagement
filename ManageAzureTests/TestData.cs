@@ -14,6 +14,9 @@ namespace ManageAzureTests
         [XmlElement("PublishSettingsFile")]
         public string PublishSettingsFile { get; set; }
 
+        [XmlElement("DownloadResourcePath")]
+        public string DownloadResourcePath { get; set; }
+
         [XmlElement("TestCloudServices")]
         public TestCloudServices _CloudServices { get; set; }
 

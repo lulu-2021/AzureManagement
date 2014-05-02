@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="AzureModels\CloudService.cs" />
     <Compile Include="AzureModels\ComputeRole.cs" />
+    <Compile Include="AzureModels\RdpFileObject.cs" />
     <Compile Include="AzureModels\VirtualMachine.cs" />
     <Compile Include="Lib\AzureManagement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -33,6 +33,39 @@ namespace ManageAzureTests
         }
 
         [Fact]
+        public void Test_GetAllElasticRoleRdpFiles_ShouldReturnAListOfRdpFiles() 
+        {
+            var downloadPath = testData.DownloadResourcePath;
+            var rdpFileList = sut.GetAllElasticRoleRdpFiles();
+            var expectedResult = sut.DownloadRdpFiles(rdpFileList, downloadPath);
+            Should.Equals(expectedResult, true);
+        }
+
+        [Fact]
+        public void Test_GetAllVirtualMachineRdpFiles_ShouldReturnAListOfRdpFiles()
+        {
+            var downloadPath = testData.DownloadResourcePath;
+            var rdpFileList = sut.GetAllVirtualMachineRdpFiles();
+            var expectedResult = sut.DownloadRdpFiles(rdpFileList, downloadPath);
+            Should.Equals(rdpFileList.Count, 1);
+            Should.Equals(expectedResult, true);
+        }
+
+        [Fact]
+        public void Test_GetAllVirtualMachineRdpFiles_ShouldReturnAListOfRdpFiles_ForAgivenCloudService()
+        {
+            var downloadPath = testData.DownloadResourcePath;
+
+            foreach (var cloudService in testData._CloudServices._CloudServices) 
+            {
+                var rdpFileList = sut.GetAllVirtualMachineRdpFilesForService(cloudService.CloudServiceName);
+                var expectedResult = sut.DownloadRdpFiles(rdpFileList, downloadPath);
+                Should.Equals(expectedResult, true);
+            }
+        }
+
+
+        [Fact]
         public void Test_GetAllCloudServiceNames_Should_Return_AlistOfCloudServices()
         {
             CloudServices services = sut.GetAllCloudServices();
