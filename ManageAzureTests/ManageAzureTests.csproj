@@ -41,6 +41,9 @@
     <Reference Include="FluentAssertions.Core">
       <HintPath>..\packages\FluentAssertions.3.0.90\lib\net45\FluentAssertions.Core.dll</HintPath>
     </Reference>
+    <Reference Include="NSubstitute">
+      <HintPath>..\packages\NSubstitute.1.7.2.0\lib\NET45\NSubstitute.dll</HintPath>
+    </Reference>
     <Reference Include="Shouldly">
       <HintPath>..\packages\Shouldly.2.1.1\lib\net40\Shouldly.dll</HintPath>
     </Reference>
