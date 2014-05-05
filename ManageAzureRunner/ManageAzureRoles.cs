@@ -13,9 +13,29 @@ namespace ManageAzureRunner
         static void Main(string[] args)
         {
             Bootstrap.Register(AzurePublishSettingsFile);
-            var application = TinyIoCContainer.Current.Resolve<AzureManagement>(); 
+            var application = TinyIoCContainer.Current.Resolve<AzureManagement>();
 
+            //var rdpFiles = application.GetAllElasticRoleRdpFiles();
+            //var result = application.DownloadRdpFiles(rdpFiles, "c:\\temp\\rdp");
 
+            var vms = application.GetAllVirtualMachineRoles();
+            Console.WriteLine("--- Virtual Machines ---");
+            foreach (var vm in vms.MyVirtualMachines) 
+            {
+                Console.WriteLine(String.Format("Virtual Machine -- Role Name: {0} -- Role Size: {1} -- Role Type: {2}",vm.RoleName, vm.RoleSize, vm.RoleType));
+            }
+            Console.WriteLine("---------------------------------------------");
+
+            var webRoles = application.GetAllWebRoles();
+            Console.WriteLine("--- Web Roles ---");
+            foreach(var role in webRoles.MyComputeRoles)
+            {
+                Console.WriteLine(String.Format("Web Role -- Service: {0} -- Hostname: {1} -- Instance: {2} -- Size: {3} -- Status: {4} ",role.ServiceName, role.HostName, role.InstanceName, role.InstanceSize, role.InstanceStatus));
+            }
+            Console.WriteLine("---------------------------------------------");
+
+            Console.WriteLine("DONE!");
+            Console.ReadKey();
         }
     }
 

@@ -109,10 +109,10 @@ namespace ManageAzure.Lib
                                     rdpFiles.Add(rdpFile);
                                 }
                             }
-                            return rdpFiles;
                         }
                     }                    
-                } 
+                }
+                return rdpFiles; 
             }
             catch (CloudException ce) 
             { 
@@ -172,17 +172,22 @@ namespace ManageAzure.Lib
             var deployment = GetAzureDeyployment(serviceName, DeploymentSlot.Production);
             if (deployment != null)
             {
-                var instances = client.Deployments.GetBySlot(serviceName, DeploymentSlot.Production).RoleInstances;
-                if (instances != null)
+                var deployments = client.Deployments.GetBySlot(serviceName, DeploymentSlot.Production);
+                if (deployments != null) 
                 {
-                    if (instances.Count > 0)
+                    var instances = deployments.RoleInstances;
+                    if (instances != null)
                     {
-                        foreach (RoleInstance instance in instances)
+                        if (instances.Count > 0)
                         {
-                            var rdpFileName = String.Format("rdp--{0}--{1}--{2}.rdp", serviceName, deployment.Name, instance.InstanceName);
-                            rdpFile = new RdpFileObject(rdpFileName, client.VirtualMachines.GetRemoteDesktopFile(serviceName, deployment.Name, instance.InstanceName));
-                            rdpFiles.Add(rdpFile);
+                            foreach (RoleInstance instance in instances)
+                            {
+                                var rdpFileName = String.Format("rdp--{0}--{1}--{2}.rdp", serviceName, deployment.Name, instance.InstanceName);
+                                rdpFile = new RdpFileObject(rdpFileName, client.VirtualMachines.GetRemoteDesktopFile(serviceName, deployment.Name, instance.InstanceName));
+                                rdpFiles.Add(rdpFile);
+                            }
                         }
+                        return rdpFiles;
                     }
                 }
             }
@@ -237,6 +242,7 @@ namespace ManageAzure.Lib
             ComputeManagementClient client = new ComputeManagementClient(MyCloudCredentials);
             try 
             {
+                VirtualMachines vms = new VirtualMachines(new List<VirtualMachine>());
                 var hostedServices = client.HostedServices.List();
                 foreach (var service in hostedServices)
                 {
@@ -245,7 +251,6 @@ namespace ManageAzure.Lib
                     {
                         if (deployment.Roles.Count > 0)
                         {
-                            VirtualMachines vms = new VirtualMachines(new List<VirtualMachine>());
                             VirtualMachine vm = null;
                             foreach (var role in deployment.Roles)
                             {                                
@@ -254,18 +259,16 @@ namespace ManageAzure.Lib
                                     vm = new VirtualMachine(role.RoleName, role.RoleSize, role.RoleType);
                                     vms.Add(vm);
                                 }
-
                             }
-                            return vms;
                         }
                     }
                 }
+                return vms;
             }
             catch (CloudException ce) 
             { 
                 Logger.Warn(ce, String.Format("Exception during retrieval of Virtual Machine Roles Exception: {0}", ce)); 
             }
-
             return null;
         }
 
@@ -276,22 +279,26 @@ namespace ManageAzure.Lib
         public ComputeRoles GetAllWebRoles()
         {
             ComputeManagementClient client = new ComputeManagementClient(MyCloudCredentials);
+            ComputeRoles roles = null;
             try 
             {
+                roles = new ComputeRoles(new List<ComputeRole>());
                 var hostedServices = client.HostedServices.List();
                 foreach (var service in hostedServices)
                 {
-                    var instances = client.Deployments.GetBySlot(service.ServiceName, DeploymentSlot.Production).RoleInstances;
-                    if (instances.Count > 0)
+                    var deployments = client.Deployments.GetBySlot(service.ServiceName, DeploymentSlot.Production);
+                    if (deployments != null) 
                     {
-                        ComputeRoles roles = new ComputeRoles(new List<ComputeRole>());
-                        ComputeRole role = null;
-                        foreach (RoleInstance instance in instances)
+                        var instances = deployments.RoleInstances;
+                        if (instances.Count > 0)
                         {
-                            role = new ComputeRole(service.ServiceName, instance.HostName, instance.InstanceName, instance.RoleName, instance.InstanceSize, instance.InstanceStatus);
-                            roles.Add(role);
+                            ComputeRole role = null;
+                            foreach (RoleInstance instance in instances)
+                            {
+                                role = new ComputeRole(service.ServiceName, instance.HostName, instance.InstanceName, instance.RoleName, instance.InstanceSize, instance.InstanceStatus);
+                                roles.Add(role);
+                            }
                         }
-                        return roles;
                     }
                 }
             }
@@ -299,7 +306,7 @@ namespace ManageAzure.Lib
             {
                 Logger.Warn(ce, String.Format("Exception during retrieval of Web Roles Exception: {0}",ce));
             }
-            return null;
+            return roles;
         }
 
         /// <summary>
