@@ -3,6 +3,7 @@ using TinyIoC;
 using ManageAzure.Lib;
 using AppLogging;
 using AppConfiguration;
+using AppDataExport;
 
 namespace ManageAzureRunner
 {
@@ -13,12 +14,13 @@ namespace ManageAzureRunner
         static void Main(string[] args)
         {
             Bootstrap.Register(AzurePublishSettingsFile);
-            var application = TinyIoCContainer.Current.Resolve<AzureManagement>();
+            var appDownloader = TinyIoCContainer.Current.Resolve<AzureManagementDownloader>();
+            var appReporter = TinyIoCContainer.Current.Resolve<AzureManagementReporter>();
 
-            //var rdpFiles = application.GetAllElasticRoleRdpFiles();
-            //var result = application.DownloadRdpFiles(rdpFiles, "c:\\temp\\rdp");
+            //var rdpFiles = appDownloader.GetAllElasticRoleRdpFiles();
+            //var result = appDownloader.DownloadRdpFiles(rdpFiles, "c:\\temp\\rdp");
 
-            var vms = application.GetAllVirtualMachineRoles();
+            var vms = appReporter.GetAllVirtualMachineRoles();
             Console.WriteLine("--- Virtual Machines ---");
             foreach (var vm in vms.MyVirtualMachines) 
             {
@@ -26,7 +28,7 @@ namespace ManageAzureRunner
             }
             Console.WriteLine("---------------------------------------------");
 
-            var webRoles = application.GetAllWebRoles();
+            var webRoles = appReporter.GetAllWebRoles();
             Console.WriteLine("--- Web Roles ---");
             foreach(var role in webRoles.MyComputeRoles)
             {
@@ -45,8 +47,10 @@ namespace ManageAzureRunner
         {
             IMlogger mLogger = new Mlogger();
             IAppConfiguration appConfig = new ApplicationConfiguration(settingsFile);
+            IDataExporter dataExporter = new DataExporter();
             TinyIoCContainer.Current.Register<IMlogger>(mLogger);
             TinyIoCContainer.Current.Register<IAppConfiguration>(appConfig);
+            TinyIoCContainer.Current.Register<IDataExporter>(dataExporter);
         }
     }
 }

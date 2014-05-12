@@ -94,11 +94,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AzureManagementExport.cs" />
     <Compile Include="AzureModels\CloudService.cs" />
     <Compile Include="AzureModels\ComputeRole.cs" />
     <Compile Include="AzureModels\RdpFileObject.cs" />
     <Compile Include="AzureModels\VirtualMachine.cs" />
     <Compile Include="Lib\AzureManagement.cs" />
+    <Compile Include="Lib\AzureManagementDownloader.cs" />
+    <Compile Include="Lib\AzureManagementReporter.cs" />
+    <Compile Include="Lib\IAzureManagementDownloader.cs" />
+    <Compile Include="Lib\IAzureManagementReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +116,10 @@
     <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj">
       <Project>{c5313e15-3f9f-4c61-b745-13ced75edcaf}</Project>
       <Name>AppConfiguration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AppDataExport\AppDataExport.csproj">
+      <Project>{66cfb945-4acb-4441-b413-88d94beebb62}</Project>
+      <Name>AppDataExport</Name>
     </ProjectReference>
     <ProjectReference Include="..\AppLogging\AppLogging.csproj">
       <Project>{95aad4a4-75df-4bdd-882c-5128a1b8f4a4}</Project>

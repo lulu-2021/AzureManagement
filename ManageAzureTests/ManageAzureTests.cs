@@ -12,20 +12,22 @@ using System.Xml.Serialization;
 using System.IO;
 using AppConfiguration;
 using AppLogging;
+using AppDataExport;
 using TinyIoC;
 
 namespace ManageAzureTests
 {
     public class ManageAzureTests
     {
-        AzureManagement sut;
+        AzureManagementDownloader sutD;
+        AzureManagementReporter sutR;
         TestData testData;
 
         [Fact]
         public void TestReading_AzureSettingsFile_ShouldRetunAvalidSubscriptionAndManagementCertificate() 
         {
-            var expectedSubscriptionId = sut.Configuration.SubscriptionId();
-            var expectedCertificateExists = sut.Configuration.Base64EncodedManagementCertificate().Length > 0;
+            var expectedSubscriptionId = sutD.Configuration.SubscriptionId();
+            var expectedCertificateExists = sutD.Configuration.Base64EncodedManagementCertificate().Length > 0;
             var actualSubscriptionId = testData.SubscriptionId;
 
             Should.Equals(expectedCertificateExists, true);
@@ -36,8 +38,8 @@ namespace ManageAzureTests
         public void Test_GetAllElasticRoleRdpFiles_ShouldReturnAListOfRdpFiles() 
         {
             var downloadPath = testData.DownloadResourcePath;
-            var rdpFileList = sut.GetAllElasticRoleRdpFiles();
-            var expectedResult = sut.DownloadRdpFiles(rdpFileList, downloadPath);
+            var rdpFileList = sutD.GetAllElasticRoleRdpFiles();
+            var expectedResult = sutD.DownloadRdpFiles(rdpFileList, downloadPath);
             Should.Equals(expectedResult, true);
         }
 
@@ -45,8 +47,8 @@ namespace ManageAzureTests
         public void Test_GetAllVirtualMachineRdpFiles_ShouldReturnAListOfRdpFiles()
         {
             var downloadPath = testData.DownloadResourcePath;
-            var rdpFileList = sut.GetAllVirtualMachineRdpFiles();
-            var expectedResult = sut.DownloadRdpFiles(rdpFileList, downloadPath);
+            var rdpFileList = sutD.GetAllVirtualMachineRdpFiles();
+            var expectedResult = sutD.DownloadRdpFiles(rdpFileList, downloadPath);
             Should.Equals(rdpFileList.Count, 1);
             Should.Equals(expectedResult, true);
         }
@@ -58,8 +60,8 @@ namespace ManageAzureTests
 
             foreach (var cloudService in testData._CloudServices._CloudServices) 
             {
-                var rdpFileList = sut.GetAllVirtualMachineRdpFilesForService(cloudService.CloudServiceName);
-                var expectedResult = sut.DownloadRdpFiles(rdpFileList, downloadPath);
+                var rdpFileList = sutD.GetAllVirtualMachineRdpFilesForService(cloudService.CloudServiceName);
+                var expectedResult = sutD.DownloadRdpFiles(rdpFileList, downloadPath);
                 Should.Equals(expectedResult, true);
             }
         }
@@ -68,7 +70,7 @@ namespace ManageAzureTests
         [Fact]
         public void Test_GetAllCloudServiceNames_Should_Return_AlistOfCloudServices()
         {
-            CloudServices services = sut.GetAllCloudServices();
+            CloudServices services = sutR.GetAllCloudServices();
 
             foreach (var cloudService in testData._CloudServices._CloudServices)
             {
@@ -79,7 +81,7 @@ namespace ManageAzureTests
         [Fact]
         public void Test_GetAllVirtualMachineRoles_Should_Return_AlistOfVirtualMachines() 
         {
-            VirtualMachines vms = sut.GetAllVirtualMachineRoles();
+            VirtualMachines vms = sutR.GetAllVirtualMachineRoles();
 
             foreach (var vm in testData._VirtualMachines._VirtualMachineRoles) 
             {
@@ -90,7 +92,7 @@ namespace ManageAzureTests
         [Fact]
         public void Test_GetAllWebRoles_Should_Return_AlistOfWebRoles() 
         {
-            ComputeRoles roles = sut.GetAllWebRoles();
+            ComputeRoles roles = sutR.GetAllWebRoles();
 
             foreach (var role in testData._ComputeRoles._ComputeRoles) 
             {
@@ -112,7 +114,8 @@ namespace ManageAzureTests
             var settingsPath = testData.PublishSettingsFile;
             TestBootstrap.Register(settingsPath);
 
-            sut = TinyIoCContainer.Current.Resolve<AzureManagement>();
+            sutD = TinyIoCContainer.Current.Resolve<AzureManagementDownloader>();
+            sutR = TinyIoCContainer.Current.Resolve<AzureManagementReporter>();
         }
 
         public static class TestBootstrap
@@ -121,8 +124,10 @@ namespace ManageAzureTests
             {
                 IMlogger mLogger = new Mlogger();
                 IAppConfiguration appConfig = new ApplicationConfiguration(settingsFile);
+                IDataExporter dataExporter = new DataExporter();
                 TinyIoCContainer.Current.Register<IMlogger>(mLogger);
                 TinyIoCContainer.Current.Register<IAppConfiguration>(appConfig);
+                TinyIoCContainer.Current.Register<IDataExporter>(dataExporter);
             }
         }
 

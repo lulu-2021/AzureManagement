@@ -1,0 +1,62 @@
+ Volume in drive C is BOOTCAMP
+ Volume Serial Number is A61A-21A1
+
+ Directory of c:\temp\rdp
+
+05/05/2014  01:33 PM    <DIR>          .
+05/05/2014  01:33 PM    <DIR>          ..
+29/04/2014  11:03 AM    <DIR>          Azure-RDP-PS-All
+05/05/2014  02:10 PM               136 rdp--cls-beta--5933c410-faf2-4818-aac6-1a7e4bb6a1d5--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               156 rdp--cls-beta--5933c410-faf2-4818-aac6-1a7e4bb6a1d5--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               143 rdp--cls-curtin-prod--bf371665-94f5-490c-b422-42b772cf28ef--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               143 rdp--cls-curtin-prod--bf371665-94f5-490c-b422-42b772cf28ef--Janison.CLS.Azure_IN_1.rdp
+05/05/2014  02:10 PM               143 rdp--cls-curtin-prod--bf371665-94f5-490c-b422-42b772cf28ef--Janison.CLS.Azure_IN_2.rdp
+05/05/2014  02:10 PM               163 rdp--cls-curtin-prod--bf371665-94f5-490c-b422-42b772cf28ef--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  09:05 AM               143 rdp--cls-curtin-prod--d8989039-8274-4815-8e17-34f9fd6404ab--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  09:05 AM               143 rdp--cls-curtin-prod--d8989039-8274-4815-8e17-34f9fd6404ab--Janison.CLS.Azure_IN_1.rdp
+05/05/2014  09:05 AM               143 rdp--cls-curtin-prod--d8989039-8274-4815-8e17-34f9fd6404ab--Janison.CLS.Azure_IN_2.rdp
+05/05/2014  09:05 AM               163 rdp--cls-curtin-prod--d8989039-8274-4815-8e17-34f9fd6404ab--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               142 rdp--cls-curtin-uat--7eaa72e3-f49a-4be2-a8ea-c8292b323b7c--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               142 rdp--cls-curtin-uat--7eaa72e3-f49a-4be2-a8ea-c8292b323b7c--Janison.CLS.Azure_IN_1.rdp
+05/05/2014  02:10 PM               162 rdp--cls-curtin-uat--7eaa72e3-f49a-4be2-a8ea-c8292b323b7c--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  09:05 AM               145 rdp--cls-janison-alpha--87c4c0cf-0a36-4338-a711-0bbf87343b46--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  09:05 AM               165 rdp--cls-janison-alpha--87c4c0cf-0a36-4338-a711-0bbf87343b46--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               145 rdp--cls-janison-alpha--dc8e8232-3746-4a03-8313-1d63557e61d8--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               165 rdp--cls-janison-alpha--dc8e8232-3746-4a03-8313-1d63557e61d8--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               140 rdp--cls-lla-prod--3f0dad86-a676-4130-b529-67a88e07d1de--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               140 rdp--cls-lla-prod--3f0dad86-a676-4130-b529-67a88e07d1de--Janison.CLS.Azure_IN_1.rdp
+05/05/2014  02:10 PM               160 rdp--cls-lla-prod--3f0dad86-a676-4130-b529-67a88e07d1de--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               140 rdp--cls-lla-test--04e20dfc-72eb-4d61-be4b-10adf7071eb6--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               140 rdp--cls-lla-test--04e20dfc-72eb-4d61-be4b-10adf7071eb6--Janison.CLS.Azure_IN_1.rdp
+05/05/2014  02:10 PM               160 rdp--cls-lla-test--04e20dfc-72eb-4d61-be4b-10adf7071eb6--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               138 rdp--cls-ls-uat--1b425003-9c15-4827-a298-c002afa6984a--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               138 rdp--cls-ls-uat--1b425003-9c15-4827-a298-c002afa6984a--Janison.CLS.Azure_IN_1.rdp
+05/05/2014  02:10 PM               158 rdp--cls-ls-uat--1b425003-9c15-4827-a298-c002afa6984a--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               141 rdp--cls-mooc-prod--1eb63f30-9ee7-4844-af67-33fccb744156--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               141 rdp--cls-mooc-prod--1eb63f30-9ee7-4844-af67-33fccb744156--Janison.CLS.Azure_IN_1.rdp
+05/05/2014  02:10 PM               141 rdp--cls-mooc-prod--1eb63f30-9ee7-4844-af67-33fccb744156--Janison.CLS.Azure_IN_2.rdp
+05/05/2014  02:10 PM               141 rdp--cls-mooc-prod--1eb63f30-9ee7-4844-af67-33fccb744156--Janison.CLS.Azure_IN_3.rdp
+05/05/2014  02:10 PM               161 rdp--cls-mooc-prod--1eb63f30-9ee7-4844-af67-33fccb744156--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               141 rdp--cls-seab-test--85070a28-6a29-45b4-b350-89201da0cbb9--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               161 rdp--cls-seab-test--85070a28-6a29-45b4-b350-89201da0cbb9--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               145 rdp--cls-staging-sqlvm--20e7b8ba-dc3a-45d3-a7a3-24b190b8038b--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               165 rdp--cls-staging-sqlvm--20e7b8ba-dc3a-45d3-a7a3-24b190b8038b--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               136 rdp--cls-test--37c8c27c-ab9b-4856-ad1d-99b3dec4db73--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               136 rdp--cls-test--37c8c27c-ab9b-4856-ad1d-99b3dec4db73--Janison.CLS.Azure_IN_1.rdp
+05/05/2014  02:10 PM               156 rdp--cls-test--37c8c27c-ab9b-4856-ad1d-99b3dec4db73--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               137 rdp--cls-trace--45bbc2c0-2679-4f45-9ab9-42ef2dbe86a0--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               157 rdp--cls-trace--45bbc2c0-2679-4f45-9ab9-42ef2dbe86a0--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               139 rdp--CLS-US-Prod--b592e4a8-7742-449d-b781-0427b777180e--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               139 rdp--CLS-US-Prod--b592e4a8-7742-449d-b781-0427b777180e--Janison.CLS.Azure_IN_1.rdp
+05/05/2014  02:10 PM               159 rdp--CLS-US-Prod--b592e4a8-7742-449d-b781-0427b777180e--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               140 rdp--cls-weu-prod--430c55f2-44b5-4852-b4be-6177e8bcc88b--Janison.CLS.Azure_IN_0.rdp
+05/05/2014  02:10 PM               140 rdp--cls-weu-prod--430c55f2-44b5-4852-b4be-6177e8bcc88b--Janison.CLS.Azure_IN_1.rdp
+05/05/2014  02:10 PM               160 rdp--cls-weu-prod--430c55f2-44b5-4852-b4be-6177e8bcc88b--Janison.TaskScheduler.Azure_IN_0.rdp
+05/05/2014  02:10 PM               138 rdp--solveit-eu--24cf69ff8e6f41abb5b218661bc0ca51--Janison.SolveITCS_IN_0.rdp
+05/05/2014  02:10 PM               138 rdp--solveit-eu--24cf69ff8e6f41abb5b218661bc0ca51--Janison.SolveITCS_IN_1.rdp
+05/05/2014  02:10 PM                77 rdp--vm-cls-sql1--vm-cls-sql1--vm-cls-sql1.rdp
+05/05/2014  02:12 PM                77 rdp--vm-cls-sql1--vm-cls-sql1.rdp
+05/05/2014  02:10 PM                79 rdp--vm-cls-ssrs01--vm-cls-ssrs01--vm-cls-ssrs01.rdp
+05/05/2014  02:12 PM                79 rdp--vm-cls-ssrs01--vm-cls-ssrs01.rdp
+              52 File(s)          7,380 bytes
+               3 Dir(s)  31,151,104,000 bytes free
