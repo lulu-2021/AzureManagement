@@ -9,25 +9,80 @@ namespace ManageAzureRunner
 {
     public class ManageAzureRoles
     {
-        const string AzurePublishSettingsFile = "c:\\temp\\Azure_Publish_Settings\\test.publishsettings";
 
         static void Main(string[] args)
         {
-            var csvExportFile = "c:\\temp\\test-csv-export.csv";
-            Bootstrap.Register(AzurePublishSettingsFile, csvExportFile);
-            var appDownloader = TinyIoCContainer.Current.Resolve<AzureManagementDownloader>();
-            var appReporter = TinyIoCContainer.Current.Resolve<AzureManagementReporter>();
+#if DEBUG
+            //var arguments = "/AzureSettingsFile \"c:\\temp\\Azure_Publish_Settings\\test.publishsettings\" /CsvExportFile \"c:\\temp\\test-csv-export.csv\" /RdpFilesDir \"c:\\temp\\rdp\" /Report /DownloadRdp";
+            var arguments = "/AzureSettingsFile \"c:\\temp\\Azure_Publish_Settings\\test.publishsettings\" /CsvExportFile \"c:\\temp\\test-csv-export.csv\" /RdpFilesDir \"c:\\temp\\rdp\" /Report ";           
+            args = arguments.Split();            
+#endif
 
-            //var rdpFiles = appDownloader.GetAllElasticRoleRdpFiles();
-            //var result = appDownloader.DownloadRdpFiles(rdpFiles, "c:\\temp\\rdp");
+            var command = Args.Configuration.Configure<CommandObject>().CreateAndBind(args);
 
-            appReporter.GetAllVirtualMachineRoles();            
-            appReporter.ExportAllWebRoles();
-            appReporter.Exporter.Flush();
+#if DEBUG
+            Bootstrap.Register(command.AzureSettingsFile, command.CsvExportFile);
+#endif
 
-            Console.WriteLine("DONE!");
-            Console.ReadKey();
+            if (command.Help)
+            {
+                Console.WriteLine("The commandline arguments for the reporting tool are:");
+                Console.WriteLine("");
+                Console.WriteLine("/AzureSettingsFile \"Location of the Azure Publishsettingsfile\" ");
+                Console.WriteLine("");
+                Console.WriteLine("/CsvExportFile \"Location of the csv file to export the data to\"");
+                Console.WriteLine("");
+                Console.WriteLine("/RdpFilesDir \"Location of the directory where to dump the RDP files\"");
+                Console.WriteLine("");
+                Console.WriteLine("/DownloadRdp \"if omitted it will not do the RDP file download\"");
+                Console.WriteLine("");
+                Console.WriteLine("/Report \"if omitted it will not do the report\"");
+            }
+            else 
+            {
+
+                if (command.AzureSettingsFile != null && command.CsvExportFile != null)
+                {
+                    Bootstrap.Register(command.AzureSettingsFile, command.CsvExportFile);
+                    if (command.RdpFilesDir != null)
+                    {
+                        var RdpFilesDir = command.RdpFilesDir;
+                    }
+                    var appDownloader = TinyIoCContainer.Current.Resolve<AzureManagementDownloader>();
+                    var appReporter = TinyIoCContainer.Current.Resolve<AzureManagementReporter>();
+
+                    // download the RDP files - currently defaults to all..
+                    if (command.DownloadRdp && command.RdpFilesDir != null)
+                    {
+                        var rdpFiles = appDownloader.GetAllElasticRoleRdpFiles();
+                        appDownloader.DownloadRdpFiles(rdpFiles, command.RdpFilesDir);
+                    }
+
+                    // run the reports - currently defaults to all roles..
+                    if (command.Report)
+                    {
+                        appReporter.GetAllVirtualMachineRoles();
+                        appReporter.ExportAllWebRoles();
+                        appReporter.Exporter.Flush();
+                    }
+                }
+                else 
+                {
+                    Console.WriteLine("AzureSettingsFile and CsvExportFile are mandatory");
+                }
+            }
+
         }
+    }
+
+    public class CommandObject
+    {
+        public string AzureSettingsFile { get; set; }
+        public string CsvExportFile { get; set; }
+        public string RdpFilesDir { get; set; }
+        public bool DownloadRdp { get; set; }
+        public bool Report { get; set; }
+        public bool Help { get; set; }
     }
 
     public static class Bootstrap 

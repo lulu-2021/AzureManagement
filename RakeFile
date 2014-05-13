@@ -2,8 +2,8 @@ require 'bundler/setup'
 require 'rubygems'
 require 'albacore'
 #
-ENVIRONMENT = "Debug"
-#ENVIRONMENT = "Release"
+#ENVIRONMENT = "Debug"
+ENVIRONMENT = "Release"
 #
 BUILD_VERSION = 1001
 BUILD_DIR = "build"
@@ -12,8 +12,8 @@ PUBLISH_BASE = "c:/publish"
 PUBLISH_DIR = "#{PUBLISH_BASE}/#{SOLUTION_NAME}"
 SOLUTION = "#{SOLUTION_NAME}.sln"
 PROJECT_DIR = "ManageAzure"
-CONFIGURATION_OPT = "Debug"
-#CONFIGURATION_OPT = "Release"
+#CONFIGURATION_OPT = "Debug"
+CONFIGURATION_OPT = "Release"
 
 #
 XUNIT_CONSOLE = "./Packages/xunit.1.9.2.runner/xunit.console.clr4.exe"
