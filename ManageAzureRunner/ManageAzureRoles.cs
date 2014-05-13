@@ -13,28 +13,17 @@ namespace ManageAzureRunner
 
         static void Main(string[] args)
         {
-            Bootstrap.Register(AzurePublishSettingsFile);
+            var csvExportFile = "c:\\temp\\test-csv-export.csv";
+            Bootstrap.Register(AzurePublishSettingsFile, csvExportFile);
             var appDownloader = TinyIoCContainer.Current.Resolve<AzureManagementDownloader>();
             var appReporter = TinyIoCContainer.Current.Resolve<AzureManagementReporter>();
 
             //var rdpFiles = appDownloader.GetAllElasticRoleRdpFiles();
             //var result = appDownloader.DownloadRdpFiles(rdpFiles, "c:\\temp\\rdp");
 
-            var vms = appReporter.GetAllVirtualMachineRoles();
-            Console.WriteLine("--- Virtual Machines ---");
-            foreach (var vm in vms.MyVirtualMachines) 
-            {
-                Console.WriteLine(String.Format("Virtual Machine -- Role Name: {0} -- Role Size: {1} -- Role Type: {2}",vm.RoleName, vm.RoleSize, vm.RoleType));
-            }
-            Console.WriteLine("---------------------------------------------");
-
-            var webRoles = appReporter.GetAllWebRoles();
-            Console.WriteLine("--- Web Roles ---");
-            foreach(var role in webRoles.MyComputeRoles)
-            {
-                Console.WriteLine(String.Format("Web Role -- Service: {0} -- Hostname: {1} -- Instance: {2} -- Size: {3} -- Status: {4} ",role.ServiceName, role.HostName, role.InstanceName, role.InstanceSize, role.InstanceStatus));
-            }
-            Console.WriteLine("---------------------------------------------");
+            appReporter.GetAllVirtualMachineRoles();            
+            appReporter.ExportAllWebRoles();
+            appReporter.Exporter.Flush();
 
             Console.WriteLine("DONE!");
             Console.ReadKey();
@@ -43,14 +32,15 @@ namespace ManageAzureRunner
 
     public static class Bootstrap 
     {
-        public static void Register(string settingsFile)
+        public static void Register(string settingsFile, string csvExportFile)
         {
             IMlogger mLogger = new Mlogger();
             IAppConfiguration appConfig = new ApplicationConfiguration(settingsFile);
-            IDataExporter dataExporter = new DataExporter();
+            IDataExporter consoleExporter = new ConsoleWriter();
+            IDataExporter csvWriter = new CsvExporter(mLogger, csvExportFile);
             TinyIoCContainer.Current.Register<IMlogger>(mLogger);
             TinyIoCContainer.Current.Register<IAppConfiguration>(appConfig);
-            TinyIoCContainer.Current.Register<IDataExporter>(dataExporter);
+            TinyIoCContainer.Current.Register<IDataExporter>(csvWriter);
         }
     }
 }

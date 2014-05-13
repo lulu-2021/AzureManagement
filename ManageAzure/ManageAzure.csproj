@@ -94,7 +94,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AzureManagementExport.cs" />
     <Compile Include="AzureModels\CloudService.cs" />
     <Compile Include="AzureModels\ComputeRole.cs" />
     <Compile Include="AzureModels\RdpFileObject.cs" />
@@ -104,6 +103,7 @@
     <Compile Include="Lib\AzureManagementReporter.cs" />
     <Compile Include="Lib\IAzureManagementDownloader.cs" />
     <Compile Include="Lib\IAzureManagementReporter.cs" />
+    <Compile Include="Lib\MemberUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -17,6 +17,26 @@ namespace ManageAzure.Lib
         { }
 
         /// <summary>
+        /// Exports a list of Cloud Service objects for a given subscription. Each cloud service contains some metadata of the actual cloud service
+        /// Since the "Exporter" was injected - we do not care how this is actually implemented - that decision is left to the exporter!
+        /// </summary>
+        public void ExportAllCloudServices() 
+        {
+            // first get the correct header names and export these
+            var _serviceNameHeader = MemberUtils.GetPropertyName<CloudService>(cs => cs.ServiceName);
+            var _serviceUriHeader = MemberUtils.GetPropertyName<CloudService>(cs => cs.Uri);
+            IList<string> dataHeaders = new List<string> { _serviceNameHeader, _serviceUriHeader };
+            Exporter.ExportHeader(dataHeaders);
+
+            // then retrieve the data values and export these
+            foreach (var cloudService in GetAllCloudServices().MyCloudServices) 
+            {
+                IList<string> dataCols = new List<string> { cloudService.ServiceName, cloudService.Uri };
+                Exporter.ExportDataRow(dataCols);
+            }
+        }
+
+        /// <summary>
         ///  Returns a list of Cloud Cervice objects for a given subscription. Each cloud service contains some metadata of the actual cloud service
         /// </summary>
         /// <returns>A list of Cloud Serviec objects</returns>
@@ -43,6 +63,28 @@ namespace ManageAzure.Lib
             }
             return null;
         }
+
+        /// <summary>
+        /// Exports a list of Virtual Machine Role objects for a given subscription. Each role object contains some metadata of the actual virtual machine role
+        /// Since the "Exporter" was injected - we do not care how this is actually implemented - that decision is left to the exporter!
+        /// </summary>
+        public void ExportAllVirtualMachineRoles() 
+        {
+            // first get the correct header names and export these
+            var _roleNameHeader = MemberUtils.GetPropertyName<VirtualMachine>(vm => vm.RoleName);
+            var _roleSizeHeader = MemberUtils.GetPropertyName<VirtualMachine>(vm => vm.RoleSize);
+            var _roleTypeHeader = MemberUtils.GetPropertyName<VirtualMachine>(vm => vm.RoleType);
+            IList<string> dataHeaders = new List<string> { _roleNameHeader, _roleSizeHeader, _roleTypeHeader };
+            Exporter.ExportHeader(dataHeaders);
+
+            // then retrieve the data values and export these
+            foreach (var vm in GetAllVirtualMachineRoles().MyVirtualMachines )
+            {
+                IList<string> dataCols = new List<string> { vm.RoleName, vm.RoleSize, vm.RoleType };
+                Exporter.ExportDataRow(dataCols);
+            }
+        }
+
 
         /// <summary>
         /// Returns a list of Permanent Virtual Machine roles. Each Virtual Machine object contains some metadata of the actual virtual machine
@@ -84,6 +126,30 @@ namespace ManageAzure.Lib
         }
 
         /// <summary>
+        /// Exports a list of Web Role objects for a given subscription. Each role object contains some metadata of the actual web role
+        /// Since the "Exporter" was injected - we do not care how this is actually implemented - that decision is left to the exporter!
+        /// </summary>
+        public void ExportAllWebRoles() 
+        {
+            // first get the correct header names and export these
+            var _hostNameHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.HostName);
+            var _instanceNameHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.InstanceName);
+            var _instanceSizeHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.InstanceSize);
+            var _instanceStatusHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.InstanceStatus);
+            var _roleNameHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.RoleName);
+            var _serviceNameHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.ServiceName);
+            IList<string> dataHeaders = new List<string> { _hostNameHeader, _instanceNameHeader, _instanceSizeHeader, _instanceStatusHeader, _roleNameHeader, _serviceNameHeader};
+            Exporter.ExportHeader(dataHeaders);
+
+            // then retrieve the data values and export these
+            foreach (var cr in GetAllWebRoles().MyComputeRoles)
+            {
+                IList<string> dataCols = new List<string> { cr.HostName, cr.InstanceName, cr.InstanceSize, cr.InstanceStatus, cr.RoleName, cr.ServiceName };
+                Exporter.ExportDataRow(dataCols);
+            }
+        }
+
+        /// <summary>
         /// Returns a list of Compute Roles for all cloud services in a given subscription. The Compute Role list will include Web and Worker Roles.
         /// </summary>
         /// <returns>A list of Compute Roles</returns>
@@ -119,7 +185,5 @@ namespace ManageAzure.Lib
             }
             return roles;
         }
-
-
     }
 }

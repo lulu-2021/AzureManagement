@@ -124,7 +124,7 @@ namespace ManageAzureTests
             {
                 IMlogger mLogger = new Mlogger();
                 IAppConfiguration appConfig = new ApplicationConfiguration(settingsFile);
-                IDataExporter dataExporter = new DataExporter();
+                IDataExporter dataExporter = new ConsoleWriter();
                 TinyIoCContainer.Current.Register<IMlogger>(mLogger);
                 TinyIoCContainer.Current.Register<IAppConfiguration>(appConfig);
                 TinyIoCContainer.Current.Register<IDataExporter>(dataExporter);

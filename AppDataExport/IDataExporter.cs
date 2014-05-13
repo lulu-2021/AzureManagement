@@ -13,5 +13,7 @@ namespace AppDataExport
         void ExportHeader(IList<string> headers);
 
         void ExportDataRow(IList<string> dataCols);
+
+        void Flush();
     }
 }
