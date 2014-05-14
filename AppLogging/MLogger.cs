@@ -1,5 +1,6 @@
 ﻿using System;
 using Serilog;
+using Serilog.Sinks.EventLog;
 
 namespace AppLogging
 {
@@ -11,7 +12,11 @@ namespace AppLogging
         public Mlogger()
         {
             var log = new LoggerConfiguration()
+#if DEBUG
                 .WriteTo.ColoredConsole()
+#else
+                .WriteTo.EventLog("AzureApiReporter")
+#endif
                 .CreateLogger();
             logger = log;
         }

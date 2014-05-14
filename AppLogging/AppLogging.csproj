@@ -36,6 +36,9 @@
     <Reference Include="Serilog.FullNetFx">
       <HintPath>..\packages\Serilog.1.3.3\lib\net45\Serilog.FullNetFx.dll</HintPath>
     </Reference>
+    <Reference Include="Serilog.Sinks.EventLog">
+      <HintPath>..\packages\Serilog.Sinks.EventLog.1.3.7\lib\net45\Serilog.Sinks.EventLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

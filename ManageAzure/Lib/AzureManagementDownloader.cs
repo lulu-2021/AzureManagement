@@ -66,8 +66,14 @@ namespace ManageAzure.Lib
                                 if (role.RoleType == VirtualMachineRoleType.PersistentVMRole.ToString())
                                 {
                                     var rdpFileName = String.Format("rdp--{0}--{1}.rdp", cloudService.ServiceName, role.RoleName);
-                                    rdpFile = new RdpFileObject(rdpFileName, client.VirtualMachines.GetRemoteDesktopFile(cloudService.ServiceName, deploymentName, role.RoleName));
-                                    rdpFiles.Add(rdpFile);
+                                    try { 
+                                        rdpFile = new RdpFileObject(rdpFileName, client.VirtualMachines.GetRemoteDesktopFile(cloudService.ServiceName, deploymentName, role.RoleName));
+                                        rdpFiles.Add(rdpFile);
+                                    }
+                                    catch(CloudException cerdp)
+                                    {
+                                        Logger.Warn(cerdp, String.Format("Exception durign retrieval of Virtual Machine RDP file - possibly no endpoint? - exception: {0}", cerdp));
+                                    }
                                 }
                             }
                         }
@@ -77,7 +83,7 @@ namespace ManageAzure.Lib
             }
             catch (CloudException ce)
             {
-                Logger.Warn(ce, String.Format("Exception durign retrieval of Virtual Machine RDP files - exception: {0}", ce));
+                Logger.Warn(ce, String.Format("Exception durign retrieval of Cloud Service List - exception: {0}", ce));
             }
             return null;
         }
@@ -89,33 +95,40 @@ namespace ManageAzure.Lib
         public List<RdpFileObject> GetAllElasticRoleRdpFiles()
         {
             ComputeManagementClient client = new ComputeManagementClient(MyCloudCredentials);
-            var rdpFiles = new List<RdpFileObject>();
-            RdpFileObject rdpFile = null;
-
-            var hostedServices = client.HostedServices.List();
-            if (hostedServices.Count() > 0)
+            try
             {
-                foreach (var service in hostedServices)
+                var rdpFiles = new List<RdpFileObject>();
+                RdpFileObject rdpFile = null;
+
+                var hostedServices = client.HostedServices.List();
+                if (hostedServices.Count() > 0)
                 {
-                    var deployment = GetAzureDeyployment(service.ServiceName, DeploymentSlot.Production);
-                    if (deployment != null)
+                    foreach (var service in hostedServices)
                     {
-                        var instances = client.Deployments.GetBySlot(service.ServiceName, DeploymentSlot.Production).RoleInstances;
-                        if (instances != null)
+                        var deployment = GetAzureDeyployment(service.ServiceName, DeploymentSlot.Production);
+                        if (deployment != null)
                         {
-                            if (instances.Count > 0)
+                            var instances = client.Deployments.GetBySlot(service.ServiceName, DeploymentSlot.Production).RoleInstances;
+                            if (instances != null)
                             {
-                                foreach (RoleInstance instance in instances)
+                                if (instances.Count > 0)
                                 {
-                                    var rdpFileName = String.Format("rdp--{0}--{1}--{2}.rdp", service.ServiceName, deployment.Name, instance.InstanceName);
-                                    rdpFile = new RdpFileObject(rdpFileName, client.VirtualMachines.GetRemoteDesktopFile(service.ServiceName, deployment.Name, instance.InstanceName));
-                                    rdpFiles.Add(rdpFile);
+                                    foreach (RoleInstance instance in instances)
+                                    {
+                                        var rdpFileName = String.Format("rdp--{0}--{1}--{2}.rdp", service.ServiceName, deployment.Name, instance.InstanceName);
+                                        rdpFile = new RdpFileObject(rdpFileName, client.VirtualMachines.GetRemoteDesktopFile(service.ServiceName, deployment.Name, instance.InstanceName));
+                                        rdpFiles.Add(rdpFile);
+                                    }
                                 }
                             }
                         }
                     }
+                    return rdpFiles;
                 }
-                return rdpFiles;
+            }
+            catch (CloudException ce) 
+            {
+                Logger.Warn(ce, String.Format("Exception durign retrieval of Web Role RDP files - exception: {0}", ce));
             }
             return null;
         }

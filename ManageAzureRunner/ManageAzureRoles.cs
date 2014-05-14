@@ -13,8 +13,7 @@ namespace ManageAzureRunner
         static void Main(string[] args)
         {
 #if DEBUG
-            //var arguments = "/AzureSettingsFile \"c:\\temp\\Azure_Publish_Settings\\test.publishsettings\" /CsvExportFile \"c:\\temp\\test-csv-export.csv\" /RdpFilesDir \"c:\\temp\\rdp\" /Report /DownloadRdp";
-            var arguments = "/AzureSettingsFile \"c:\\temp\\Azure_Publish_Settings\\test.publishsettings\" /CsvExportFile \"c:\\temp\\test-csv-export.csv\" /RdpFilesDir \"c:\\temp\\rdp\" /Report ";           
+            var arguments = "/AzureSettingsFile c:\\temp\\Azure_Publish_Settings\\test.publishsettings /CsvExportFile c:\\temp\\test-csv-export.csv /RdpFilesDir c:\\temp\\rdp /Report /DownloadRdp";           
             args = arguments.Split();            
 #endif
 
@@ -54,17 +53,27 @@ namespace ManageAzureRunner
                     // download the RDP files - currently defaults to all..
                     if (command.DownloadRdp && command.RdpFilesDir != null)
                     {
-                        var rdpFiles = appDownloader.GetAllElasticRoleRdpFiles();
-                        appDownloader.DownloadRdpFiles(rdpFiles, command.RdpFilesDir);
+                        // vm roles
+                        var vmRdpFiles = appDownloader.GetAllVirtualMachineRdpFiles();
+                        appDownloader.DownloadRdpFiles(vmRdpFiles, command.RdpFilesDir);
+                        // web and worker roles
+                        var webRdpFiles = appDownloader.GetAllElasticRoleRdpFiles();
+                        appDownloader.DownloadRdpFiles(webRdpFiles, command.RdpFilesDir);
+
                     }
 
                     // run the reports - currently defaults to all roles..
                     if (command.Report)
                     {
-                        appReporter.GetAllVirtualMachineRoles();
+                        appReporter.ExportAllVirtualMachineRoles();
                         appReporter.ExportAllWebRoles();
                         appReporter.Exporter.Flush();
                     }
+
+#if DEBUG
+                    Console.ReadKey();
+#endif
+
                 }
                 else 
                 {

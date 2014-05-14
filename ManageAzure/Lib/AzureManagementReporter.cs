@@ -78,10 +78,14 @@ namespace ManageAzure.Lib
             Exporter.ExportHeader(dataHeaders);
 
             // then retrieve the data values and export these
-            foreach (var vm in GetAllVirtualMachineRoles().MyVirtualMachines )
+            var vmObj = GetAllVirtualMachineRoles();
+            if (vmObj != null) 
             {
-                IList<string> dataCols = new List<string> { vm.RoleName, vm.RoleSize, vm.RoleType };
-                Exporter.ExportDataRow(dataCols);
+                foreach (var vm in vmObj.MyVirtualMachines)
+                {
+                    IList<string> dataCols = new List<string> { vm.RoleName, vm.RoleSize, vm.RoleType };
+                    Exporter.ExportDataRow(dataCols);
+                }
             }
         }
 
@@ -142,10 +146,14 @@ namespace ManageAzure.Lib
             Exporter.ExportHeader(dataHeaders);
 
             // then retrieve the data values and export these
-            foreach (var cr in GetAllWebRoles().MyComputeRoles)
+            var webRoleObj = GetAllWebRoles();
+            if ( webRoleObj != null)
             {
-                IList<string> dataCols = new List<string> { cr.HostName, cr.InstanceName, cr.InstanceSize, cr.InstanceStatus, cr.RoleName, cr.ServiceName };
-                Exporter.ExportDataRow(dataCols);
+                foreach (var cr in webRoleObj.MyComputeRoles)
+                {
+                    IList<string> dataCols = new List<string> { cr.HostName, cr.InstanceName, cr.InstanceSize, cr.InstanceStatus, cr.RoleName, cr.ServiceName };
+                    Exporter.ExportDataRow(dataCols);
+                }
             }
         }
 
