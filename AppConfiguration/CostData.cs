@@ -14,11 +14,11 @@ namespace AppConfiguration
         [XmlElement("RoleHourlyRates")]
         public RoleHourlyRates Rates { get; set; }
 
-        public int GetMyRate(string roleType) 
+        public double GetMyRate(string roleSize) 
         {
-            var rateStr = GetMyRateAsString(roleType);
-            int rate = 0;
-            int.TryParse(rateStr, out rate);
+            var rateStr = GetMyRateAsString(roleSize);
+            double rate = 0.0;
+            double.TryParse(rateStr, out rate);
             return rate;
         }
 

@@ -9,7 +9,6 @@ namespace ManageAzureRunner
 {
     public class ManageAzureRoles
     {
-
         static void Main(string[] args)
         {
 #if DEBUG

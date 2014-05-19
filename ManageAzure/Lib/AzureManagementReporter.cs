@@ -114,7 +114,7 @@ namespace ManageAzure.Lib
                             {
                                 if (role.RoleType == VirtualMachineRoleType.PersistentVMRole.ToString())
                                 {
-                                    var rate = Configuration.GetAzureRates().GetMyRate(role.RoleType);
+                                    var rate = Configuration.GetAzureRates().GetMyRate(role.RoleSize);
                                     vm = new VirtualMachine(role.RoleName, role.RoleSize, role.RoleType, rate);
                                     vms.Add(vm);
                                 }
@@ -182,7 +182,7 @@ namespace ManageAzure.Lib
                             ComputeRole role = null;
                             foreach (RoleInstance instance in instances)
                             {
-                                var rate = Configuration.GetAzureRates().GetMyRate(instance.RoleName);
+                                var rate = Configuration.GetAzureRates().GetMyRate(instance.InstanceSize);
                                 role = new ComputeRole(service.ServiceName, instance.HostName, instance.InstanceName, instance.RoleName, instance.InstanceSize, instance.InstanceStatus, rate);
                                 roles.Add(role);
                             }

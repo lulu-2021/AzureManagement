@@ -11,10 +11,10 @@ namespace ManageAzure.AzureModels
         public string RoleName { get; set; }
         public string InstanceSize { get; set; }
         public string InstanceStatus { get; set; }
-        public int HourlyRate { get; set; }
-        public int MonthlyRate { get; set; }
+        public double HourlyRate { get; set; }
+        public double MonthlyRate { get; set; }
 
-        public ComputeRole(string serviceName, string hostName, string instanceName, string roleName, string instanceSize, string instanceStatus, int hourlyRate) 
+        public ComputeRole(string serviceName, string hostName, string instanceName, string roleName, string instanceSize, string instanceStatus, double hourlyRate) 
         {
             ServiceName = serviceName;
             HostName = hostName;
