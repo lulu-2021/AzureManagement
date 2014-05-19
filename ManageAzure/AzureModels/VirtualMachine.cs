@@ -8,13 +8,17 @@ namespace ManageAzure.AzureModels
         public string RoleName { get; set; }
         public string RoleSize { get; set; }
         public string RoleType { get; set; }
+        public int HourlyRate { get; set; }
+        public int MonthlyRate { get; set; }
 
         public VirtualMachine() { }
-        public VirtualMachine(string roleName, string roleSize, string roleType) 
+        public VirtualMachine(string roleName, string roleSize, string roleType, int hourlyRate) 
         {
             RoleName = roleName;
             RoleSize = roleSize;
             RoleType = roleType;
+            HourlyRate = hourlyRate;
+            MonthlyRate = hourlyRate * 24 * 31;
         }
     }
 

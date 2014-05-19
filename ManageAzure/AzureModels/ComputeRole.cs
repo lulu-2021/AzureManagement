@@ -11,8 +11,10 @@ namespace ManageAzure.AzureModels
         public string RoleName { get; set; }
         public string InstanceSize { get; set; }
         public string InstanceStatus { get; set; }
+        public int HourlyRate { get; set; }
+        public int MonthlyRate { get; set; }
 
-        public ComputeRole(string serviceName, string hostName, string instanceName, string roleName, string instanceSize, string instanceStatus) 
+        public ComputeRole(string serviceName, string hostName, string instanceName, string roleName, string instanceSize, string instanceStatus, int hourlyRate) 
         {
             ServiceName = serviceName;
             HostName = hostName;
@@ -20,6 +22,8 @@ namespace ManageAzure.AzureModels
             RoleName = roleName;
             InstanceSize = instanceSize;
             InstanceStatus = instanceStatus;
+            HourlyRate = hourlyRate;
+            MonthlyRate = hourlyRate * 24 * 31;
         }
     }
     public class ComputeRoles

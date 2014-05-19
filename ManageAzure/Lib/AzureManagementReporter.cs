@@ -83,7 +83,7 @@ namespace ManageAzure.Lib
             {
                 foreach (var vm in vmObj.MyVirtualMachines)
                 {
-                    IList<string> dataCols = new List<string> { vm.RoleName, vm.RoleSize, vm.RoleType };
+                    IList<string> dataCols = new List<string> { vm.RoleName, vm.RoleSize, vm.RoleType, vm.HourlyRate.ToString(), vm.MonthlyRate.ToString() };
                     Exporter.ExportDataRow(dataCols);
                 }
             }
@@ -100,7 +100,8 @@ namespace ManageAzure.Lib
             try
             {
                 VirtualMachines vms = new VirtualMachines(new List<VirtualMachine>());
-                var hostedServices = client.HostedServices.List();
+                var hostedServices = client.HostedServices.List();                
+                
                 foreach (var service in hostedServices)
                 {
                     var deployment = GetAzureDeyployment(service.ServiceName, DeploymentSlot.Production);
@@ -113,7 +114,8 @@ namespace ManageAzure.Lib
                             {
                                 if (role.RoleType == VirtualMachineRoleType.PersistentVMRole.ToString())
                                 {
-                                    vm = new VirtualMachine(role.RoleName, role.RoleSize, role.RoleType);
+                                    var rate = Configuration.GetAzureRates().GetMyRate(role.RoleType);
+                                    vm = new VirtualMachine(role.RoleName, role.RoleSize, role.RoleType, rate);
                                     vms.Add(vm);
                                 }
                             }
@@ -151,7 +153,7 @@ namespace ManageAzure.Lib
             {
                 foreach (var cr in webRoleObj.MyComputeRoles)
                 {
-                    IList<string> dataCols = new List<string> { cr.HostName, cr.InstanceName, cr.InstanceSize, cr.InstanceStatus, cr.RoleName, cr.ServiceName };
+                    IList<string> dataCols = new List<string> { cr.HostName, cr.InstanceName, cr.InstanceSize, cr.InstanceStatus, cr.RoleName, cr.ServiceName, cr.HourlyRate.ToString(), cr.MonthlyRate.ToString() };
                     Exporter.ExportDataRow(dataCols);
                 }
             }
@@ -180,7 +182,8 @@ namespace ManageAzure.Lib
                             ComputeRole role = null;
                             foreach (RoleInstance instance in instances)
                             {
-                                role = new ComputeRole(service.ServiceName, instance.HostName, instance.InstanceName, instance.RoleName, instance.InstanceSize, instance.InstanceStatus);
+                                var rate = Configuration.GetAzureRates().GetMyRate(instance.RoleName);
+                                role = new ComputeRole(service.ServiceName, instance.HostName, instance.InstanceName, instance.RoleName, instance.InstanceSize, instance.InstanceStatus, rate);
                                 roles.Add(role);
                             }
                         }

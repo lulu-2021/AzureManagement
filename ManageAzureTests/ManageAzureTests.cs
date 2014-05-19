@@ -109,10 +109,11 @@ namespace ManageAzureTests
         public ManageAzureTests() 
         {
             var setupFile ="c:\\temp\\Azure_Publish_Settings\\AzureManagementTestConfig.xml";
+            var costDataFile = "c:\\temp\\Azure_Publish_Settings\\AzureCosts.xml";
             testData = ReadTestData(setupFile);
 
             var settingsPath = testData.PublishSettingsFile;
-            TestBootstrap.Register(settingsPath);
+            TestBootstrap.Register(settingsPath, costDataFile);
 
             sutD = TinyIoCContainer.Current.Resolve<AzureManagementDownloader>();
             sutR = TinyIoCContainer.Current.Resolve<AzureManagementReporter>();
@@ -120,10 +121,10 @@ namespace ManageAzureTests
 
         public static class TestBootstrap
         {
-            public static void Register(string settingsFile)
+            public static void Register(string settingsFile, string costDataFile)
             {
                 IMlogger mLogger = new Mlogger();
-                IAppConfiguration appConfig = new ApplicationConfiguration(settingsFile);
+                IAppConfiguration appConfig = new ApplicationConfiguration(settingsFile,costDataFile);
                 IDataExporter dataExporter = new ConsoleWriter();
                 TinyIoCContainer.Current.Register<IMlogger>(mLogger);
                 TinyIoCContainer.Current.Register<IAppConfiguration>(appConfig);

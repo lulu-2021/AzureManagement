@@ -8,15 +8,18 @@ namespace AppConfiguration
     {
         string SubscriptionId();
         string Base64EncodedManagementCertificate();
+        CostData GetAzureRates();
     }
 
     public class ApplicationConfiguration : IAppConfiguration
     {
-        PublishData AzurePublishData { get; set; }
+        private PublishData AzurePublishData { get; set; }
+        protected CostData AzureCostData { get; set; }
 
-        public ApplicationConfiguration(string settingsFile)
+        public ApplicationConfiguration(string settingsFile, string costDataFile)
         {
             AzurePublishData = ReadAzurePublishSettingsFile(settingsFile);
+            AzureCostData = ReadAzureCostDataFile(costDataFile);
         }
 
         public string SubscriptionId()
@@ -27,6 +30,16 @@ namespace AppConfiguration
         public string Base64EncodedManagementCertificate()
         {
             return AzurePublishData._Profile._Subcription.ManagementCertificate;
+        }
+
+        public CostData GetAzureRates() 
+        {
+            if (AzureCostData != null) 
+            {
+                return AzureCostData;
+            }
+            // fall back to just passing an empty object so that the export proces does not fail!
+            return new CostData();
         }
 
         /// <summary>
@@ -55,6 +68,29 @@ namespace AppConfiguration
                 reader.Close();
             }
         }
+
+        private CostData ReadAzureCostDataFile(string costDataPath)
+        {
+            TextReader reader = null;
+            try
+            {
+                XmlSerializer deserializer = new XmlSerializer(typeof(CostData));
+                reader = new StreamReader(@costDataPath);
+                object obj = deserializer.Deserialize(reader);
+                CostData XmlData = (CostData)obj;
+                return XmlData;
+            }
+            catch (InvalidOperationException ioe)
+            {
+                var message = String.Format("Error Reading the Azure Cost Data File{0}", ioe);
+                throw ioe;
+            }
+            finally
+            {
+                reader.Close();
+            }
+        }
+
     }
 
 }

@@ -13,14 +13,14 @@ namespace ManageAzureRunner
         static void Main(string[] args)
         {
 #if DEBUG
-            var arguments = "/AzureSettingsFile c:\\temp\\Azure_Publish_Settings\\test.publishsettings /CsvExportFile c:\\temp\\test-csv-export.csv /RdpFilesDir c:\\temp\\rdp /Report /DownloadRdp";           
+            var arguments = "/AzureSettingsFile c:\\temp\\Azure_Publish_Settings\\test.publishsettings /CostDataFile c:\\temp\\Azure_Publish_Settings\\AzureCosts.xml /CsvExportFile c:\\temp\\test-csv-export.csv /RdpFilesDir c:\\temp\\rdp /Report /DownloadRdp";           
             args = arguments.Split();            
 #endif
 
             var command = Args.Configuration.Configure<CommandObject>().CreateAndBind(args);
 
 #if DEBUG
-            Bootstrap.Register(command.AzureSettingsFile, command.CsvExportFile);
+            Bootstrap.Register(command.AzureSettingsFile, command.CostDataFile, command.CsvExportFile);
 #endif
 
             if (command.Help)
@@ -42,7 +42,7 @@ namespace ManageAzureRunner
 
                 if (command.AzureSettingsFile != null && command.CsvExportFile != null)
                 {
-                    Bootstrap.Register(command.AzureSettingsFile, command.CsvExportFile);
+                    Bootstrap.Register(command.AzureSettingsFile, command.CostDataFile, command.CsvExportFile);
                     if (command.RdpFilesDir != null)
                     {
                         var RdpFilesDir = command.RdpFilesDir;
@@ -87,6 +87,7 @@ namespace ManageAzureRunner
     public class CommandObject
     {
         public string AzureSettingsFile { get; set; }
+        public string CostDataFile { get; set; }
         public string CsvExportFile { get; set; }
         public string RdpFilesDir { get; set; }
         public bool DownloadRdp { get; set; }
@@ -96,10 +97,10 @@ namespace ManageAzureRunner
 
     public static class Bootstrap 
     {
-        public static void Register(string settingsFile, string csvExportFile)
+        public static void Register(string settingsFile, string costDataFile, string csvExportFile)
         {
             IMlogger mLogger = new Mlogger();
-            IAppConfiguration appConfig = new ApplicationConfiguration(settingsFile);
+            IAppConfiguration appConfig = new ApplicationConfiguration(settingsFile, costDataFile);
             IDataExporter consoleExporter = new ConsoleWriter();
             IDataExporter csvWriter = new CsvExporter(mLogger, csvExportFile);
             TinyIoCContainer.Current.Register<IMlogger>(mLogger);
