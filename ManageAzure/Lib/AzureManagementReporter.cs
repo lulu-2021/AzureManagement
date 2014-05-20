@@ -74,7 +74,9 @@ namespace ManageAzure.Lib
             var _roleNameHeader = MemberUtils.GetPropertyName<VirtualMachine>(vm => vm.RoleName);
             var _roleSizeHeader = MemberUtils.GetPropertyName<VirtualMachine>(vm => vm.RoleSize);
             var _roleTypeHeader = MemberUtils.GetPropertyName<VirtualMachine>(vm => vm.RoleType);
-            IList<string> dataHeaders = new List<string> { _roleNameHeader, _roleSizeHeader, _roleTypeHeader };
+            var _hourlyRateHeader = MemberUtils.GetPropertyName<VirtualMachine>(cr => cr.HourlyRate);
+            var _monthlyRateHeader = MemberUtils.GetPropertyName<VirtualMachine>(cr => cr.MonthlyRate);
+            IList<string> dataHeaders = new List<string> { _roleNameHeader, _roleSizeHeader, _roleTypeHeader, _hourlyRateHeader, _monthlyRateHeader };
             Exporter.ExportHeader(dataHeaders);
 
             // then retrieve the data values and export these
@@ -144,7 +146,9 @@ namespace ManageAzure.Lib
             var _instanceStatusHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.InstanceStatus);
             var _roleNameHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.RoleName);
             var _serviceNameHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.ServiceName);
-            IList<string> dataHeaders = new List<string> { _hostNameHeader, _instanceNameHeader, _instanceSizeHeader, _instanceStatusHeader, _roleNameHeader, _serviceNameHeader};
+            var _hourlyRateHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.HourlyRate);
+            var _monthlyRateHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.MonthlyRate);
+            IList<string> dataHeaders = new List<string> { _hostNameHeader, _instanceNameHeader, _instanceSizeHeader, _instanceStatusHeader, _roleNameHeader, _serviceNameHeader, _hourlyRateHeader, _monthlyRateHeader};
             Exporter.ExportHeader(dataHeaders);
 
             // then retrieve the data values and export these
