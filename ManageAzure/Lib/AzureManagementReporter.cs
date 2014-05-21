@@ -8,6 +8,7 @@ using AppConfiguration;
 using AppDataExport;
 using ManageAzure.AzureModels;
 
+
 namespace ManageAzure.Lib
 {
     public class AzureManagementReporter :AzureManagement, IAzureManagementReporter
@@ -74,9 +75,10 @@ namespace ManageAzure.Lib
             var _roleNameHeader = MemberUtils.GetPropertyName<VirtualMachine>(vm => vm.RoleName);
             var _roleSizeHeader = MemberUtils.GetPropertyName<VirtualMachine>(vm => vm.RoleSize);
             var _roleTypeHeader = MemberUtils.GetPropertyName<VirtualMachine>(vm => vm.RoleType);
+            var _osVersionHeader = MemberUtils.GetPropertyName<VirtualMachine>(vm => vm.OsVersion);
             var _hourlyRateHeader = MemberUtils.GetPropertyName<VirtualMachine>(cr => cr.HourlyRate);
             var _monthlyRateHeader = MemberUtils.GetPropertyName<VirtualMachine>(cr => cr.MonthlyRate);
-            IList<string> dataHeaders = new List<string> { _roleNameHeader, _roleSizeHeader, _roleTypeHeader, _hourlyRateHeader, _monthlyRateHeader };
+            IList<string> dataHeaders = new List<string> { _roleNameHeader, _roleSizeHeader, _roleTypeHeader, _osVersionHeader, _hourlyRateHeader, _monthlyRateHeader };
             Exporter.ExportHeader(dataHeaders);
 
             // then retrieve the data values and export these
@@ -85,7 +87,7 @@ namespace ManageAzure.Lib
             {
                 foreach (var vm in vmObj.MyVirtualMachines)
                 {
-                    IList<string> dataCols = new List<string> { vm.RoleName, vm.RoleSize, vm.RoleType, vm.HourlyRate.ToString(), vm.MonthlyRate.ToString() };
+                    IList<string> dataCols = new List<string> { vm.RoleName, vm.RoleSize, vm.RoleType, vm.OsVersion, vm.HourlyRate, vm.MonthlyRate };
                     Exporter.ExportDataRow(dataCols);
                 }
             }
@@ -116,8 +118,9 @@ namespace ManageAzure.Lib
                             {
                                 if (role.RoleType == VirtualMachineRoleType.PersistentVMRole.ToString())
                                 {
+                                    var operatingSystem = string.Format("{0}--{1}",role.OSVirtualHardDisk.OperatingSystem, role.OSVirtualHardDisk.SourceImageName);
                                     var rate = Configuration.GetAzureRates().GetMyRate(role.RoleSize);
-                                    vm = new VirtualMachine(role.RoleName, role.RoleSize, role.RoleType, rate);
+                                    vm = new VirtualMachine(role.RoleName, role.RoleSize, role.RoleType, operatingSystem, rate);
                                     vms.Add(vm);
                                 }
                             }
@@ -140,15 +143,15 @@ namespace ManageAzure.Lib
         public void ExportAllWebRoles() 
         {
             // first get the correct header names and export these
-            var _hostNameHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.HostName);
             var _instanceNameHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.InstanceName);
             var _instanceSizeHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.InstanceSize);
             var _instanceStatusHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.InstanceStatus);
             var _roleNameHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.RoleName);
             var _serviceNameHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.ServiceName);
+            var _osVersionHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.OsVersion);
             var _hourlyRateHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.HourlyRate);
             var _monthlyRateHeader = MemberUtils.GetPropertyName<ComputeRole>(cr => cr.MonthlyRate);
-            IList<string> dataHeaders = new List<string> { _hostNameHeader, _instanceNameHeader, _instanceSizeHeader, _instanceStatusHeader, _roleNameHeader, _serviceNameHeader, _hourlyRateHeader, _monthlyRateHeader};
+            IList<string> dataHeaders = new List<string> { _instanceNameHeader, _instanceSizeHeader, _instanceStatusHeader, _roleNameHeader, _serviceNameHeader, _osVersionHeader, _hourlyRateHeader, _monthlyRateHeader};
             Exporter.ExportHeader(dataHeaders);
 
             // then retrieve the data values and export these
@@ -157,7 +160,7 @@ namespace ManageAzure.Lib
             {
                 foreach (var cr in webRoleObj.MyComputeRoles)
                 {
-                    IList<string> dataCols = new List<string> { cr.HostName, cr.InstanceName, cr.InstanceSize, cr.InstanceStatus, cr.RoleName, cr.ServiceName, cr.HourlyRate.ToString(), cr.MonthlyRate.ToString() };
+                    IList<string> dataCols = new List<string> { cr.InstanceName, cr.InstanceSize, cr.InstanceStatus, cr.RoleName, cr.ServiceName, cr.OsVersion, cr.HourlyRate, cr.MonthlyRate };
                     Exporter.ExportDataRow(dataCols);
                 }
             }
@@ -180,6 +183,16 @@ namespace ManageAzure.Lib
                     var deployments = client.Deployments.GetBySlot(service.ServiceName, DeploymentSlot.Production);
                     if (deployments != null)
                     {
+                        var osVersion = string.Empty;
+                        var _roles = deployments.Roles;
+                        if (_roles != null && _roles.Count > 0)
+                        {
+                            foreach (var role in _roles) 
+                            {
+                                osVersion = role.OSVersion;
+                            }
+                        }
+
                         var instances = deployments.RoleInstances;
                         if (instances.Count > 0)
                         {
@@ -187,7 +200,7 @@ namespace ManageAzure.Lib
                             foreach (RoleInstance instance in instances)
                             {
                                 var rate = Configuration.GetAzureRates().GetMyRate(instance.InstanceSize);
-                                role = new ComputeRole(service.ServiceName, instance.HostName, instance.InstanceName, instance.RoleName, instance.InstanceSize, instance.InstanceStatus, rate);
+                                role = new ComputeRole(service.ServiceName, instance.InstanceName, instance.RoleName, instance.InstanceSize, instance.InstanceStatus, osVersion, rate);
                                 roles.Add(role);
                             }
                         }

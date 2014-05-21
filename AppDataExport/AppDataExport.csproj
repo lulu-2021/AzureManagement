@@ -42,7 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataExporter.cs" />
+    <Compile Include="ConsoleWriter.cs" />
+    <Compile Include="CsvExporter.cs" />
+    <Compile Include="FileExporter.cs" />
+    <Compile Include="HtmlExporter.cs" />
     <Compile Include="IDataExporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

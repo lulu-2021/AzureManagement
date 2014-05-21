@@ -8,17 +8,19 @@ namespace ManageAzure.AzureModels
         public string RoleName { get; set; }
         public string RoleSize { get; set; }
         public string RoleType { get; set; }
-        public double HourlyRate { get; set; }
-        public double MonthlyRate { get; set; }
+        public string OsVersion { get; set; }
+        public string HourlyRate { get; set; }
+        public string MonthlyRate { get; set; }
 
         public VirtualMachine() { }
-        public VirtualMachine(string roleName, string roleSize, string roleType, double hourlyRate) 
+        public VirtualMachine(string roleName, string roleSize, string roleType, string osVersion, double hourlyRate) 
         {
             RoleName = roleName;
             RoleSize = roleSize;
             RoleType = roleType;
-            HourlyRate = hourlyRate;
-            MonthlyRate = hourlyRate * 24 * 31;
+            OsVersion = osVersion;
+            HourlyRate = hourlyRate.ToString();
+            MonthlyRate = (hourlyRate * 24 * 31).ToString();
         }
     }
 

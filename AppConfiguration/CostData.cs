@@ -22,9 +22,9 @@ namespace AppConfiguration
             return rate;
         }
 
-        private string GetMyRateAsString(string roleType)
+        public string GetMyRateAsString(string roleSize)
         {            
-            switch (roleType)
+            switch (roleSize)
             {
                 case "ExtraSmall":
                     return Rates.ExtraSmall;

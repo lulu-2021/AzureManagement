@@ -12,15 +12,10 @@ namespace ManageAzureRunner
         static void Main(string[] args)
         {
 #if DEBUG
-            var arguments = "/AzureSettingsFile c:\\temp\\Azure_Publish_Settings\\test.publishsettings /CostDataFile c:\\temp\\Azure_Publish_Settings\\AzureCosts.xml /CsvExportFile c:\\temp\\test-csv-export.csv /RdpFilesDir c:\\temp\\rdp /Report /DownloadRdp";           
+            var arguments = "/AzureSettingsFile c:\\temp\\Azure_Publish_Settings\\test.publishsettings /CostDataFile c:\\temp\\Azure_Publish_Settings\\AzureCosts.xml /ExportFile c:\\temp\\test-html-export.html /RdpFilesDir c:\\temp\\rdp /Report /DownloadRdp /html";       
             args = arguments.Split();            
 #endif
-
             var command = Args.Configuration.Configure<CommandObject>().CreateAndBind(args);
-
-#if DEBUG
-            Bootstrap.Register(command.AzureSettingsFile, command.CostDataFile, command.CsvExportFile);
-#endif
 
             if (command.Help)
             {
@@ -28,20 +23,31 @@ namespace ManageAzureRunner
                 Console.WriteLine("");
                 Console.WriteLine("/AzureSettingsFile \"Location of the Azure Publishsettingsfile\" ");
                 Console.WriteLine("");
-                Console.WriteLine("/CsvExportFile \"Location of the csv file to export the data to\"");
+                Console.WriteLine("/ExportFile \"Location of the file to export the data to\"");
                 Console.WriteLine("");
                 Console.WriteLine("/RdpFilesDir \"Location of the directory where to dump the RDP files\"");
                 Console.WriteLine("");
                 Console.WriteLine("/DownloadRdp \"if omitted it will not do the RDP file download\"");
                 Console.WriteLine("");
                 Console.WriteLine("/Report \"if omitted it will not do the report\"");
+                Console.WriteLine("");
+                Console.WriteLine("/Csv \" if this flag and html is omitted it will go to the console\"");
+                Console.WriteLine("");
+                Console.WriteLine("/Html \" if this flag and Csv is omitted it will go to the console\"");
             }
             else 
             {
 
-                if (command.AzureSettingsFile != null && command.CsvExportFile != null)
+                if (command.AzureSettingsFile != null && command.ExportFile != null)
                 {
-                    Bootstrap.Register(command.AzureSettingsFile, command.CostDataFile, command.CsvExportFile);
+
+                    var exportType = Bootstrap.EnExportType.Console;
+                    if (command.Csv) { exportType = Bootstrap.EnExportType.Csv; }
+                    else if (command.Html) { exportType = Bootstrap.EnExportType.Html; }
+
+                    // Boot strap the process with the right configuration and reporting processes..
+                    Bootstrap.Register(command.AzureSettingsFile, command.CostDataFile, command.ExportFile, exportType);
+
                     if (command.RdpFilesDir != null)
                     {
                         var RdpFilesDir = command.RdpFilesDir;
@@ -83,28 +89,53 @@ namespace ManageAzureRunner
         }
     }
 
+
+
     public class CommandObject
     {
         public string AzureSettingsFile { get; set; }
         public string CostDataFile { get; set; }
-        public string CsvExportFile { get; set; }
+        public string ExportFile { get; set; }
         public string RdpFilesDir { get; set; }
         public bool DownloadRdp { get; set; }
         public bool Report { get; set; }
+        public bool Csv { get; set; }
+        public bool Html { get; set; }
         public bool Help { get; set; }
     }
 
     public static class Bootstrap 
     {
-        public static void Register(string settingsFile, string costDataFile, string csvExportFile)
+        public enum EnExportType 
         {
+            Console,
+            Csv,
+            Html
+        }
+
+        public static void Register(string settingsFile, string costDataFile, string exportFile = "", EnExportType exportType = EnExportType.Console)
+        {
+            var tableHeader = "<html><body><table>";
+            var tableFooter = "</table></body></html>";
+
             IMlogger mLogger = new Mlogger();
             IAppConfiguration appConfig = new ApplicationConfiguration(settingsFile, costDataFile);
-            IDataExporter consoleExporter = new ConsoleWriter();
-            IDataExporter csvWriter = new CsvExporter(mLogger, csvExportFile);
             TinyIoCContainer.Current.Register<IMlogger>(mLogger);
             TinyIoCContainer.Current.Register<IAppConfiguration>(appConfig);
-            TinyIoCContainer.Current.Register<IDataExporter>(csvWriter);
+            IDataExporter exporter = null;
+            switch (exportType) 
+            {
+                case EnExportType.Console:
+                    exporter = new ConsoleWriter();
+                    break;
+                case EnExportType.Csv:
+                    exporter = new CsvExporter(mLogger, exportFile);
+                    break;
+                case EnExportType.Html:
+                    exporter = new HtmlExporter(mLogger, exportFile, tableHeader, tableFooter);
+                    break;
+            }
+            TinyIoCContainer.Current.Register<IDataExporter>(exporter);
         }
     }
 }
