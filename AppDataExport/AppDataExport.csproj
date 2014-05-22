@@ -46,7 +46,9 @@
     <Compile Include="CsvExporter.cs" />
     <Compile Include="FileExporter.cs" />
     <Compile Include="HtmlExporter.cs" />
+    <Compile Include="HtmlWrapper.cs" />
     <Compile Include="IDataExporter.cs" />
+    <Compile Include="IHtmlWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

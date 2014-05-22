@@ -9,23 +9,22 @@ namespace AppDataExport
 
     public class HtmlExporter : FileExporter, IDataExporter
     {
-        private string _TableHeader { get; set; }
-        private string _TableFooter { get; set; }
-        public HtmlExporter(IMlogger logger, string exportFileLocation, string docHeader, string docFooter )
+        private IHtmlWrapper Wrapper { get; set; }
+
+        public HtmlExporter(IMlogger logger, string exportFileLocation, IHtmlWrapper wrapper )
             : base(logger, exportFileLocation)
-        {            
-            _TableHeader = docHeader;
-            _TableFooter = docFooter;
+        {
+            Wrapper = wrapper;
         }
 
         public override void ExportHeader(IList<string> headers)
         {
-            var _header = "<tr>";
+            var _header = "<thead><tr>";
             foreach (var header in headers)
             {
                 _header += string.Format("<th>{0}</th>", header);
             }
-            _header += "</tr>";
+            _header += "</tr></thead>";
             _ExportData.Add(_header);
         }
 
@@ -45,13 +44,12 @@ namespace AppDataExport
             try
             {
                 var html = new StringBuilder();
-                html.Append(_TableHeader);
                 foreach (var line in _ExportData)
                 {
                     html.AppendLine(string.Join("", line));
                 }
-                html.Append(_TableFooter);
-                File.WriteAllText(_ExportFile, html.ToString());
+                var output = Wrapper.Wrap(html.ToString());
+                File.WriteAllText(_ExportFile, output);
             }
             catch (Exception htmlE)
             {

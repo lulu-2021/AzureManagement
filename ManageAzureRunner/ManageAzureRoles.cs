@@ -4,6 +4,7 @@ using ManageAzure.Lib;
 using AppLogging;
 using AppConfiguration;
 using AppDataExport;
+using System.Text;
 
 namespace ManageAzureRunner
 {
@@ -40,13 +41,17 @@ namespace ManageAzureRunner
 
                 if (command.AzureSettingsFile != null && command.ExportFile != null)
                 {
-
+                    IHtmlWrapper wrapper = null;
                     var exportType = Bootstrap.EnExportType.Console;
                     if (command.Csv) { exportType = Bootstrap.EnExportType.Csv; }
-                    else if (command.Html) { exportType = Bootstrap.EnExportType.Html; }
+                    else if (command.Html) { 
+                        exportType = Bootstrap.EnExportType.Html;
+                        // this one here has all our hard coded html stuff in it - but would be very easy to replace with something else!
+                        wrapper = new HtmlWrapper();
+                    }
 
                     // Boot strap the process with the right configuration and reporting processes..
-                    Bootstrap.Register(command.AzureSettingsFile, command.CostDataFile, command.ExportFile, exportType);
+                    Bootstrap.Register(command.AzureSettingsFile, command.CostDataFile, command.ExportFile, exportType, wrapper);
 
                     if (command.RdpFilesDir != null)
                     {
@@ -113,10 +118,8 @@ namespace ManageAzureRunner
             Html
         }
 
-        public static void Register(string settingsFile, string costDataFile, string exportFile = "", EnExportType exportType = EnExportType.Console)
+        public static void Register(string settingsFile, string costDataFile, string exportFile = "", EnExportType exportType = EnExportType.Console, IHtmlWrapper wrapper = null)
         {
-            var tableHeader = "<html><body><table>";
-            var tableFooter = "</table></body></html>";
 
             IMlogger mLogger = new Mlogger();
             IAppConfiguration appConfig = new ApplicationConfiguration(settingsFile, costDataFile);
@@ -132,7 +135,16 @@ namespace ManageAzureRunner
                     exporter = new CsvExporter(mLogger, exportFile);
                     break;
                 case EnExportType.Html:
-                    exporter = new HtmlExporter(mLogger, exportFile, tableHeader, tableFooter);
+                    if (wrapper != null)
+                    {
+                        exporter = new HtmlExporter(mLogger, exportFile, wrapper);
+                    }
+                    else 
+                    {
+                        // Fall back to Consolewriter - ideally we should log this failure...
+                        exporter = new ConsoleWriter();
+                    }
+                    
                     break;
             }
             TinyIoCContainer.Current.Register<IDataExporter>(exporter);
