@@ -28,11 +28,12 @@ namespace ManageAzure.Lib
             var _serviceUriHeader = MemberUtils.GetPropertyName<CloudService>(cs => cs.Uri);
             IList<string> dataHeaders = new List<string> { _serviceNameHeader, _serviceUriHeader };
             Exporter.ExportHeader(dataHeaders);
+            IList<string> dataCols = null;
 
             // then retrieve the data values and export these
             foreach (var cloudService in GetAllCloudServices().MyCloudServices) 
             {
-                IList<string> dataCols = new List<string> { cloudService.ServiceName, cloudService.Uri };
+                dataCols = new List<string> { cloudService.ServiceName, cloudService.Uri };
                 Exporter.ExportDataRow(dataCols);
             }
         }
@@ -85,11 +86,18 @@ namespace ManageAzure.Lib
             var vmObj = GetAllVirtualMachineRoles();
             if (vmObj != null) 
             {
+                IList<string> dataCols = null;
+                int totalMonthlyRate = 0;
+                int runningTotalMonthlyRate = 0;
                 foreach (var vm in vmObj.MyVirtualMachines)
                 {
-                    IList<string> dataCols = new List<string> { vm.RoleName, vm.RoleSize, vm.RoleType, vm.OsVersion, vm.HourlyRate, vm.MonthlyRate };
+                    dataCols = new List<string> { vm.RoleName, vm.RoleSize, vm.RoleType, vm.OsVersion, vm.HourlyRate, vm.MonthlyRate };
                     Exporter.ExportDataRow(dataCols);
+                    int.TryParse(vm.MonthlyRate, out runningTotalMonthlyRate);
+                    totalMonthlyRate += runningTotalMonthlyRate;
                 }
+                var totals = new List<string> { "","","","","Total:",totalMonthlyRate.ToString() };
+                Exporter.ExportDataRow(totals);
             }
         }
 
@@ -158,11 +166,20 @@ namespace ManageAzure.Lib
             var webRoleObj = GetAllWebRoles();
             if ( webRoleObj != null)
             {
+                IList<string> dataCols = null;
+                int totalMonthlyRate = 0;
+                int runningTotalMonthlyRate = 0;
+
                 foreach (var cr in webRoleObj.MyComputeRoles)
                 {
-                    IList<string> dataCols = new List<string> { cr.InstanceName, cr.InstanceSize, cr.InstanceStatus, cr.RoleName, cr.ServiceName, cr.OsVersion, cr.HourlyRate, cr.MonthlyRate };
+                    dataCols = new List<string> { cr.InstanceName, cr.InstanceSize, cr.InstanceStatus, cr.RoleName, cr.ServiceName, cr.OsVersion, cr.HourlyRate, cr.MonthlyRate };
                     Exporter.ExportDataRow(dataCols);
+                    int.TryParse(cr.MonthlyRate, out runningTotalMonthlyRate);
+                    totalMonthlyRate += runningTotalMonthlyRate;
                 }
+                var totals = new List<string> { "", "", "", "", "", "", "Total:", totalMonthlyRate.ToString() };
+                Exporter.ExportDataRow(totals);
+
             }
         }
 
